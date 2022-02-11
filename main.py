@@ -2,12 +2,24 @@ import sys
 
 file = []
 for line in sys.stdin: 
-    file.append(line.rstrip())
-    num_testes = int(file[0])
-# for i in range(1,(num_testes+1)*10):
-#     pass
+    file.append(line.strip())
+#num_testes = int(file[0])
 
-faces_2 = [
+#tests = []
+#init = 1
+#for i in range(1,num_testes+1):
+#    tests.append(file[init:(10*i)+1])
+#    init=+11
+#print(tests)
+
+tests = [file[x:x+10] for x in range(1, len(file), 10)]
+
+rotation = []
+for i in tests:
+    rotation.append(i[9])
+print(rotation)
+
+faces = [
 [["X","X","X"],["X","X","X"],["X","X","X"]],
 [["","",""],["","",""],["","",""]],
 [["","",""],["","",""],["","",""]],
@@ -17,7 +29,70 @@ faces_2 = [
 [["","",""],["","",""],["","",""]]
 ]
 
-faces = [
+
+def create_cube(test):
+    faces[1][0][0] = test[3][0]
+    faces[1][0][1] = test[3][2]
+    faces[1][0][2] = test[3][4]
+    faces[1][1][0] = test[4][0]
+    faces[1][1][1] = test[4][2]
+    faces[1][1][2] = test[4][4]
+    faces[1][2][0] = test[5][0]
+    faces[1][2][1] = test[5][2]
+    faces[1][2][2] = test[5][4]
+
+    faces[2][0][0] = test[3][6]
+    faces[2][0][1] = test[3][8]
+    faces[2][0][2] = test[3][10]
+    faces[2][1][0] = test[4][6]
+    faces[2][1][1] = test[4][8]
+    faces[2][1][2] = test[4][10]
+    faces[2][2][0] = test[5][6]
+    faces[2][2][1] = test[5][8]
+    faces[2][2][2] = test[5][10]
+
+    faces[3][0][0] = test[3][12]
+    faces[3][0][1] = test[3][14]
+    faces[3][0][2] = test[3][16]
+    faces[3][1][0] = test[4][12]
+    faces[3][1][1] = test[4][14]
+    faces[3][1][2] = test[4][16]
+    faces[3][2][0] = test[5][12]
+    faces[3][2][1] = test[5][14]
+    faces[3][2][2] = test[5][16]
+
+    faces[4][0][0] = test[3][18]
+    faces[4][0][1] = test[3][20]
+    faces[4][0][2] = test[3][22]
+    faces[4][1][0] = test[4][18]
+    faces[4][1][1] = test[4][20]
+    faces[4][1][2] = test[4][22]
+    faces[4][2][0] = test[5][18]
+    faces[4][2][1] = test[5][20]
+    faces[4][2][2] = test[5][22]
+
+    faces[5][0][0] = test[0][0]
+    faces[5][0][1] = test[0][2]
+    faces[5][0][2] = test[0][4]
+    faces[5][1][0] = test[1][0]
+    faces[5][1][1] = test[1][2]
+    faces[5][1][2] = test[1][4]
+    faces[5][2][0] = test[2][0]
+    faces[5][2][1] = test[2][2]
+    faces[5][2][2] = test[2][4]
+
+    faces[6][0][0] = test[6][0]
+    faces[6][0][1] = test[6][2]
+    faces[6][0][2] = test[6][4]
+    faces[6][1][0] = test[7][0]
+    faces[6][1][1] = test[7][2]
+    faces[6][1][2] = test[7][4]
+    faces[6][2][0] = test[8][0]
+    faces[6][2][1] = test[8][2]
+    faces[6][2][2] = test[8][4]
+    print(faces)
+
+faces_2 = [
 [["X","X","X"],["X","X","X"],["X","X","X"]],
 [["W","W","W"],["W","W","W"],["W","W","W"]],
 [["Y","R","R"],["Y","R","R"],["Y","R","R"]],
@@ -26,46 +101,8 @@ faces = [
 [["G","Y","Y"],["G","Y","Y"],["G","Y","Y"]],
 [["R","B","B"],["R","B","B"],["R","B","B"]]
 ]
-      
-face_one = [["","",""],["","",""],["","",""]]
-face_two = [["","",""],["","",""],["","",""]]
-face_three = [["","",""],["","",""],["","",""]]
-face_four = [["","",""],["","",""],["","",""]]
-face_five = [["","",""],["","",""],["","",""]]
-face_six = [["","",""],["","",""],["","",""]]
 
 # -> Clockwise <- Anticlockwise
-faces_rotate_one = [(2,0),(6,0),(4,4),(5,0)]
-faces_rotate_two = [3,6,1,5]
-faces_rotate_three = [2,6,4,5]
-faces_rotate_four = [4,6,2,5]
-faces_rotate_five = [4,1,2,3]
-faces_rotate_six = [2,3,4,1]
-#[face,columns]
-faces_rotation_order = [
-    [0,0,0,0],
-    [[2,0],[6,0],[4,2],[5,0]],
-    [3,6,1,5],
-    [2,6,4,5],
-    [4,6,2,5],
-    [4,1,2,3],
-    [2,3,4,1]
-]
-
-def rotate_face(face, direction):
-    if direction == "+":
-        aux = faces[faces_rotation_order[face][0][0]]
-        for i in range(0,3):
-            faces[faces_rotation_order[face][i][0]][faces_rotation_order[face][i][1]] = faces[faces_rotation_order[face][i+1][0]][faces_rotation_order[face][i+1][1]]
-        faces[faces_rotation_order[face][-1][0]] = aux
-    else:
-        faces_rotation_order_inverted = faces_rotation_order[face].reverse()
-        aux = faces_rotation_order_inverted
-        for i in faces_rotation_order_inverted:
-            faces[0][i] = faces[0][i+1]
-        faces[faces_rotation_order_inverted[-1]] = aux
-
-
 def rotate_face_one(direction):
     if direction == "-":
         aux = ["","",""]
@@ -174,6 +211,33 @@ def rotate_face_six(direction):
             faces[3][i][2] = faces[2][2][i]
             faces[2][2][i] = aux[i]
 
+def rotate(rotation):
+    rotations = rotation.split(" ")
+    for r in rotations:
+        if r == "0":
+            break
+        if r[1] == "1":
+            rotate_face_one(r[0])
+        if r[1] == "2":
+            rotate_face_two(r[0])
+        if r[1] == "3":
+            rotate_face_three(r[0])
+        if r[1] == "4":
+            rotate_face_four(r[0])
+        if r[1] == "5":
+            rotate_face_five(r[0])
+        if r[1] == "6":
+            rotate_face_six(r[0])
 
-rotate_face_one("-")
-print(faces)
+
+
+
+
+
+
+for test in tests:
+    create_cube(test)
+    rotate(test[9])
+    print(faces)
+    #check_rotation()
+    pass
